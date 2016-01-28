@@ -73,11 +73,11 @@ RUN pip install -r requirements.txt
 RUN pip install gunicorn
 #### Need to add a gunicorn.conf somehow... Perhaps provide an additional git clone? or Maybe run this using a local config dir? Or, maybe we can have zookeeper provide the configs?
 #### Prepare the Database ####
-RUN cp crits/config/database_example.py crits/config/database.py
-RUN SC=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)' | fold -w 50 | head -n 1)
-RUN SE=$(echo ${SC} | sed -e 's/\\/\\\\/g' | sed -e 's/\//\\\//g' | sed -e 's/&/\\\&/g')
-RUN sed -i -e "s/^\(SECRET_KEY = \).*$/\1\'${SE}\'/1" crits/config/database.py
-RUN sed -i -e "s/^\(MONGO_HOST = \).*$/\1\'mongodb'/1" crits/config/database.py  # need to change the mongo host to the docker image name
+RUN cp crits/config/database_example.py crits/config/database.py && \
+    SC=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)' | fold -w 50 | head -n 1) && \
+    SE=$(echo ${SC} | sed -e 's/\\/\\\\/g' | sed -e 's/\//\\\//g' | sed -e 's/&/\\\&/g') && \
+    sed -i -e "s/^\(SECRET_KEY = \).*$/\1\'${SE}\'/1" crits/config/database.py && \
+    sed -i -e "s/^\(MONGO_HOST = \).*$/\1\'mongodb'/1" crits/config/database.py  # need to change the mongo host to the docker image name
 # TODO need to check for the default collections, then if they exist offer a chance to run the upgrade command
 RUN echo 'Building Default Collections'
 WORKDIR /data/crits
