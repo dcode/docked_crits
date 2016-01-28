@@ -79,12 +79,12 @@ RUN cp crits/config/database_example.py crits/config/database.py && \
     sed -i -e "s/^\(SECRET_KEY = \).*$/\1\'${SE}\'/1" crits/config/database.py && \
     sed -i -e "s/^\(MONGO_HOST = \).*$/\1\os.environ['MONGODB_PORT_27017_TCP_ADDR']/1" crits/config/database.py  # need to change the mongo host to the docker image name
 # TODO need to check for the default collections, then if they exist offer a chance to run the upgrade command
-RUN echo 'Building Default Collections'
-WORKDIR /data/crits
-RUN python manage.py create_default_collections
-RUN echo 'Set up a default admin'
-RUN python manage.py users -a -A -e admin@foo.org -f admin -l admin -o foo -u admin
-RUN echo 'Starting runserver'
-RUN python manage.py runserver 0.0.0.0:8080
-EXPOSE 8080
+#RUN echo 'Building Default Collections'
+#WORKDIR /data/crits
+#RUN python manage.py create_default_collections
+#RUN echo 'Set up a defaault admin'
+#RUN python manage.py users -a -A -e admin@foo.org -f admin -l admin -o foo -u admin
+#RUN echo 'Starting runserver'
+#RUN python manage.py runserver 0.0.0.0:8080
+#EXPOSE 8080
 
