@@ -1,0 +1,17 @@
+# run me with ````docker-compose run -d crits-web . ````
+#
+db:
+  image: percona/percona-server-mongodb:latest
+  container_name: mongodb
+  volumes:
+  - /c/Users/Adam_Kniffen/data
+  expose:
+  - "27017"
+crits-web:
+  build: .
+  container_name: crits-web
+  command: python manage.py runserver 0.0.0.0:8000
+  ports:
+  - "8080:8080"
+  links:
+  - db
