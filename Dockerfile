@@ -8,16 +8,15 @@ ENV container docker
 USER root
 RUN echo 'Update the image and get the basics'
 RUN yum -y update && yum -y install git openssh sudo vim wget
-RUN echo 'Grabbing EPEL, RpmForge, CERT Forensics Repos'
-RUN rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt && \
-    rpm -i http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
-RUN yum -y install epel-release
+RUN echo 'Grabbing EPEL, RpmForge, CERT Forensics Repos' && \
+    rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt && \
+    rpm -i http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm && \
+    yum -y install epel-release
 WORKDIR /tmp
 RUN wget https://forensics.cert.org/cert-forensics-tools-release-el7.rpm && \
     rpm -i cert-forensics-tools-release-el7.rpm && \
     rm cert-forensics-tools-release-el7.rpm
-RUN echo 'Installing Packages' && yum clean all
-RUN yum -y install make \
+RUN echo 'Installing Packages' && yum clean all && yum -y install make \
     gcc \
     gcc-c++ \
     kernel-devel \
@@ -31,7 +30,7 @@ RUN yum -y install make \
     libxml2-devel \
     libxslt-devel \
     libyaml-devel \
-RUN yum -y install numactl \
+    install numactl \
     ssdeep \
     ssdeep-devel \
     openssl-devel \
