@@ -4,13 +4,15 @@ db:
   image: percona/percona-server-mongodb:latest
   container_name: mongodb
   volumes:
-  - /c/Users/Adam_Kniffen/data
+  - /data/db
   expose:
   - "27017"
 crits-web:
   build: .
   container_name: crits-web
   command: python manage.py runserver 0.0.0.0:8080
+  volumes:
+  - /data/crits
   ports:
   - "8080:8000"
   links:

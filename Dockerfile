@@ -16,13 +16,12 @@ WORKDIR /tmp
 RUN wget https://forensics.cert.org/cert-forensics-tools-release-el7.rpm && \
     rpm -i cert-forensics-tools-release-el7.rpm && \
     rm cert-forensics-tools-release-el7.rpm
-RUN echo 'Installing Packages'
-RUN yum clean all
+RUN echo 'Installing Packages' && yum clean all
 RUN yum -y install make \
     gcc \
     gcc-c++ \
-    kernel-devel
-RUN yum -y install openldap-devel \
+    kernel-devel \
+    openldap-devel \
     pcre \
     pcre-devel \
     curl \
@@ -43,8 +42,8 @@ RUN yum -y install numactl \
     swig \
     m2crypto \
     python-pillow \
-    python-lxml
-RUN yum -y install p7zip \
+    python-lxml \
+    p7zip \
     p7zip-plugins \
     libffi-devel \
     libyaml \
@@ -67,11 +66,7 @@ RUN useradd -r -s /bin/false crits && \
 #### Install Python Dependencies ####
 RUN echo 'Installing Python Dependencies'
 WORKDIR /data/crits
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-#### Need gunicorn so we can run the proxy on a different image ####
-RUN pip install gunicorn
-#### Need to add a gunicorn.conf somehow... Perhaps provide an additional git clone? or Maybe run this using a local config dir? Or, maybe we can have zookeeper provide the configs?
+RUN pip install --upgrade pip && pip install -r requirements.txt
 #### Prepare the Database ####
 RUN cp crits/config/database_example.py crits/config/database.py && \
     SC=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(-_=+)' | fold -w 50 | head -n 1) && \
