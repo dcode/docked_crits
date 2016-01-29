@@ -1,0 +1,16 @@
+# nginx proxy using uwsgi and a shared data volume with crits-web
+FROM centos:7
+MAINTAINER knifehands
+
+ENV container docker
+
+USER root
+RUN echo 'Update the image and get the basics' && \
+    yum -y update && yum -y install git \
+    wget \
+    vim \
+    python-devel \
+    python-pip \
+    nginx
+RUN echo "config pip and grab uwsgi" && \
+    pip install --upgrade pip && pip install uwsgi
