@@ -8,7 +8,7 @@ db:
   expose:
   - "27017"
 crits-web:
-  build: crits-web_dockerfile
+  build: Dockerfile.crits-web
   container_name: crits-web
   command: python /data/crits/manage.py runserver 0.0.0.0:8080
   volumes:
@@ -18,7 +18,7 @@ crits-web:
   links:
   - db
 nginx-uwsgi:
-  build: nginx-uwsgi_dockerfile
+  build: Dockerfile.nginx-uwsgi
   container_name: nginx
   ports:
   - "80:80"
