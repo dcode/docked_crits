@@ -7,16 +7,16 @@ ENV container docker
 
 USER root
 RUN echo 'Update the image and get the basics'
-RUN yum -y update && yum -y install git openssh sudo vim wget
+RUN yum install -y git openssh sudo vim && \
+    yum clean all
 RUN echo 'Grabbing EPEL, RpmForge, CERT Forensics Repos' && \
-    rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt && \
-    rpm -i http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm && \
-    yum -y install epel-release
+    yum install -y epel-release && \
+    yum install -y http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm && \
+    yum install -y https://forensics.cert.org/cert-forensics-tools-release-el7.rpm && \
+    yum clean all
 WORKDIR /tmp
-RUN wget https://forensics.cert.org/cert-forensics-tools-release-el7.rpm && \
-    rpm -i cert-forensics-tools-release-el7.rpm && \
-    rm cert-forensics-tools-release-el7.rpm
-RUN echo 'Installing Packages' && yum clean all && yum -y install make \
+RUN echo 'Installing Packages' && yum install -y --setopt=tsflags=nodocs \
+    make \
     gcc \
     gcc-c++ \
     kernel-devel \
@@ -48,19 +48,19 @@ RUN echo 'Installing Packages' && yum clean all && yum -y install make \
     libyaml \
     upx \
     yara \
-    yara-python
+    yara-python && \
+    yum clean all
 ####Make /data for all the CRITs goodness ####
 RUN mkdir /data
 #### Fetch the CRITs Codebase ####
 WORKDIR /data
-RUN git clone https://github.com/crits/crits.git && \
-    git clone https://github.com/crits/crits_services.git
+RUN git clone --depth=1 https://github.com/crits/crits.git && \
+    git clone --depth=1 https://github.com/crits/crits_services.git
 #### Adjust permissions ####
-RUN useradd -r -s /bin/false crits && \
-    chown -R crits /data && \
-    chmod -R -v 0755 /data && \
+RUN useradd --system --shell /bin/false crits && \
+    find /data -type d -exec chmod -v 0755 {} \; && \
     touch /data/crits/logs/crits.log && \
-    chgrp -R crits /data/crits/logs && \
+    chown -R crits:crits /data && \
     chmod 0644 /data/crits/logs/crits.log
 #### Install Python Dependencies ####
 RUN echo 'Installing Python Dependencies'
